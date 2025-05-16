@@ -112,6 +112,26 @@ public class Main {
         System.out.print("Montant (MGA): ");
         double amount = getDoubleInput();
 
+        int attempts = 3;
+        boolean authenticated = false;
+
+        while (attempts > 0 && !authenticated) {
+            System.out.print("Confirmez avec votre mot de passe (" + attempts + " tentatives restantes): ");
+            String password = scanner.nextLine();
+
+            if (userService.authenticate(currentUser.getPhoneNumber(), password) != null) {
+                authenticated = true;
+            } else {
+                attempts--;
+                System.out.println("Mot de passe incorrect!");
+            }
+        }
+
+        if (!authenticated) {
+            System.out.println("Transfert annulé: trop de tentatives échouées");
+            return;
+        }
+
         if (currentUser.getBalance() >= amount) {
             transactionService.addTransaction(
                     currentUser,
