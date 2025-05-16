@@ -102,7 +102,30 @@ public class Main {
     }
 
     private void checkBalance() {
+
+        int attempts = 3;
+        boolean authenticated = false;
+
+        while (attempts > 0 && !authenticated) {
+            System.out.print("Confirmez avec votre mot de passe (" + attempts + " tentatives restantes): ");
+            String password = scanner.nextLine();
+
+            if (userService.authenticate(currentUser.getPhoneNumber(), password) != null) {
+                authenticated = true;
+            } else {
+                attempts--;
+                System.out.println("Mot de passe incorrect!");
+            }
+        }
+
+        if (!authenticated) {
+            System.out.println("Trop de tentatives échouées");
+            return;
+        }
+
+        System.out.println("------------");
         System.out.printf("Solde actuel: %.2f MGA%n", currentUser.getBalance());
+        System.out.println("------------");
     }
 
     private void transferMoney() {
@@ -140,22 +163,29 @@ public class Main {
                     "Transfert vers " + recipientNumber
             );
             currentUser.setBalance(currentUser.getBalance() - amount);
+            System.out.println("------------");
             System.out.println("Transfert réussi vers " + recipientNumber);
+            System.out.println("------------");
         } else {
+            System.out.println("------------");
             System.out.println("Solde insuffisant!");
+            System.out.println("------------");
         }
     }
     private void depositMoney() {
         System.out.print("Montant à déposer: ");
         double amount = getDoubleInput();
         transactionService.addTransaction(currentUser, TransactionType.DEPOSIT, amount, "Dépôt cash");
+        System.out.println("------------");
         System.out.println("Dépôt effectué!");
+        System.out.println("------------");
     }
 
     private void showTransactionHistory() {
         System.out.println("\nDERNIÈRES TRANSACTIONS:");
+        System.out.println("==============");
         currentUser.getTransactions().stream()
-                .limit(5)
+                .limit(10)
                 .forEach(System.out::println);
     }
 
@@ -185,7 +215,9 @@ public class Main {
     }
 
     private void displayPhoneNumber() {
+        System.out.println("------------");
         System.out.println("Votre numéro: " + currentUser.getPhoneNumber());
+        System.out.println("------------");
     }
 
     private int getIntInput() {
