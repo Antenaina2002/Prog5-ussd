@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  checkstyle-validation:
+    name: "Checkstyle: Code Quality Audit"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4.2.1
+        with:
+          distribution: 'corretto'
+          java-version: 21
+          cache: maven
+
+      - name: Analyse and recompile code with checkstyle
+        run: mvn clean install checkstyle:check
