@@ -1,7 +1,9 @@
 package com.STD22073.models;
 
 import com.STD22073.enums.OfferType;
+import lombok.Data;
 
+@Data
 public class Offer {
     private OfferType type;
     private String name;
